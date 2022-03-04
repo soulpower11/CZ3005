@@ -1,10 +1,9 @@
-# BFS algorithm in Python
-
-
+# BFS algorithm in Python 
 import collections
 import json
 
 # BFS algorithm
+
 def bfs(graph, src, dst):
 
     visited, queue = set(), collections.deque([src])
@@ -16,35 +15,26 @@ def bfs(graph, src, dst):
 
     while queue:
         # Dequeue a vertex from queue
-        vertex = queue.popleft()
-        
-        path.append(vertex)
+        path = queue.popleft()
 
-        if vertex in path:
-            path = path[:path.index(vertex)+1]
-            
-        #print(str(vertex) + " ", end="")
+        vertex = path[-1]
 
-        # last = visited[len(visited) - 1]
-
-        if(int(vertex) == dst):
-            print(queue)
-            print(visited)
-            print(path)
+        if(vertex == dst):
+            print("Shortest path: ", end="")
+            print(*path, sep=" -> ", end=".\n")
             break
-
 
         # If not visited, mark it as visited, and
         # enqueue it
-        for neighbour in graph[str(vertex)]:
+        for neighbour in graph[vertex]:
             if neighbour not in visited:
+                newPath = list(path)
+                newPath.append(neighbour)
+                queue.append(newPath)
                 visited.add(neighbour)
-                queue.append(neighbour)
 
 if __name__ == '__main__':
     f = open("G.json")
     graph = json.load(f)
-    # graph = {"0": [1, 2], "1": [2], "2": [3], "3": [1, 2]}
-    print("Following is Breadth First Traversal: ")
-    bfs(graph, 1, 2)
-    # bfs(graph, 0, 3)
+
+    bfs(graph, '1', '50')
