@@ -9,7 +9,7 @@ def uniform_cost_search(graph, dist, src, dest):
     path = [src]
     
     # insert the starting index
-    queue.put([0, path])
+    queue.append([0, path])
 
     # dictionary to keep track of visited node
     visited = {}
