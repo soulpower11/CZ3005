@@ -17,7 +17,7 @@ import json
 
 
 if __name__ == '__main__':
-    f = open("G(1).json")
+    f = open("G.json")
     data = json.load(f)
     for i in data:
          print(data[i])

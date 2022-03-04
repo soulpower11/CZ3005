@@ -1,4 +1,4 @@
-# Adjascency List representation in Python
+ # Adjascency List representation in Python
 
 import json
 
@@ -36,7 +36,7 @@ class Graph:
 
 
 if __name__ == "__main__":
-    f = open("G(1).json")
+    f = open("G.json")
     data = json.load(f)
     V = len(data)+1
     print("V: ", V)
