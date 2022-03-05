@@ -1,8 +1,5 @@
-# BFS algorithm in Python 
 import collections
 import json
-
-# BFS algorithm
 
 def bfs(graph, src, dst):
 

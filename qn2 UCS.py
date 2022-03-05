@@ -90,7 +90,9 @@ if __name__ == '__main__':
     max_energy_cost = 287932
 
     # find shortest distance from source to destination node
-    path, shortest_dist, total_enegry_cost = ucs(graph, dist, cost, src, dest, max_energy_cost)
+    path, shortest_dist, total_energy_cost = ucs(graph, dist, cost, src, dest, max_energy_cost)
+
+    # print the shortest path
     print("Shortest path: ", end="")
     print(*path, sep=" -> ", end=".\n")
 
@@ -98,4 +100,4 @@ if __name__ == '__main__':
     print(f"Shortest Distance: {shortest_dist}.")
 
     # print the total energy cost
-    print(f"Total energy cost: {total_enegry_cost}.")
+    print(f"Total energy cost: {total_energy_cost}.")

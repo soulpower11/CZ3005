@@ -75,6 +75,8 @@ if __name__ == '__main__':
 
     # find shortest distance from source to destination node
     path, shortest_dist,  = ucs(graph, dist, src, dest)
+
+    # print the shortest path
     print("Shortest path: ", end="")
     print(*path, sep=" -> ", end=".\n")
 
