@@ -9,10 +9,6 @@ def bfs(graph, src, dst):
     visited, queue = set(), collections.deque([src])
     visited.add(src)
 
-    # Path vector to store the current path
-    path = []
-    path.append(src)
-
     while queue:
         # Dequeue a vertex from queue
         path = queue.popleft()

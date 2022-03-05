@@ -1,16 +1,13 @@
 import json
 from queue import PriorityQueue
 
-def uniform_cost_search(graph, dist, src, dest):
+def ucs(graph, dist, src, dest):
 
     # create a priority queue
     queue = PriorityQueue()
 
-    # create a path that starts with the starting node
-    path = [src]
-    
-    # insert the starting index
-    queue.put([0, path])
+    # push the starting index and path
+    queue.put([0, [src]])
 
     # dictionary to keep track of visited node
     visited = {}
@@ -19,18 +16,21 @@ def uniform_cost_search(graph, dist, src, dest):
     while queue:
 
         # pop the element with the highest priority
-        p = queue.get()
+        e = queue.get()
 
-        # get the path
-        path = p[1]
+        # get the current distance
+        cur_dist = e[0]
+
+        # get the current path
+        cur_path = e[1]
 
         # set the current node to the last node in the path
-        cur_node = path[-1]
+        cur_node = cur_path[-1]
 
         # check if current node is the destination node
         if cur_node == dest:
             # return the path and the total distance from source to destination node
-            return path, p[0]
+            return cur_path, cur_dist
 
         # check for the non visited nodes
         if cur_node not in visited:
@@ -38,14 +38,16 @@ def uniform_cost_search(graph, dist, src, dest):
 
                 # clone current path to a new path to 
                 # prevent appending to the current path
-                newPath = path[:]
+                newPath = cur_path[:]
 
                 # append the adjacent node to the new path
                 newPath.append(graph[str(cur_node)][i])
 
-                # push adjacent node and path into priority queue
-                queue.put(
-                    [(p[0] + dist[f"{cur_node},{graph[str(cur_node)][i]}"]), newPath])
+                # calculate the new distance
+                newDist = cur_dist + dist[f"{cur_node},{graph[str(cur_node)][i]}"]
+
+                # push adjacent node with it's distance and path into priority queue
+                queue.put([newDist, newPath])
 
         # mark current ndoe as visited
         visited[cur_node] = 1
@@ -68,7 +70,7 @@ if __name__ == '__main__':
     dest = '50'
 
     # find shortest distance from source to destination node
-    path, shortest_dist,  = uniform_cost_search(graph, dist, src, dest)
+    path, shortest_dist,  = ucs(graph, dist, src, dest)
     print("Shortest path: ", end="")
     print(*path, sep=" -> ", end=".\n")
 
