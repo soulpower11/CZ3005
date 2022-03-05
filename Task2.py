@@ -1,12 +1,13 @@
 import json
+from queue import PriorityQueue
 
-def ucs(graph, dist, cost, src, dest, max_energy_cost):
+def ucs_with_budget(graph, dist, cost, src, dest, max_energy_cost):
 
     # create a priority queue
-    queue = []
+    queue = PriorityQueue()
 
-    # push the starting index
-    queue.append([0, 0, [src]])
+    # push the starting index and path
+    queue.put([0, 0, [src]])
 
     # dictionary to keep track of visited node
     visited = {}
@@ -14,15 +15,11 @@ def ucs(graph, dist, cost, src, dest, max_energy_cost):
     # while the queue is not empty
     while queue:
 
-        # sort the queue so that the element with the highest priority is the last element
-        queue = sorted(queue)
-        e = queue[-1]
-
         # pop the element with the highest priority
-        del queue[-1]
+        e = queue.get()
 
         # get the current distance
-        cur_dist = e[0] * -1
+        cur_dist = e[0]
 
         # get the current energy cost
         cur_cost = e[1]
@@ -53,14 +50,12 @@ def ucs(graph, dist, cost, src, dest, max_energy_cost):
                 newCost = cur_cost + cost[f"{cur_node},{neighbour}"]
 
                 # calculate the new distance
-                # new distance is multiplied by -1 so that
-                # least priority is at the top
-                newDist = (cur_dist + dist[f"{cur_node},{neighbour}"]) * -1
+                newDist = cur_dist + dist[f"{cur_node},{neighbour}"]
 
                 # check if new cost is less than the max energy cost
                 if newCost <= max_energy_cost:
                     # push adjacent node with it's distance and path into priority queue
-                    queue.append([newDist, newCost, newPath])
+                    queue.put([newDist, newCost, newPath])
 
         # mark current ndoe as visited
         visited[cur_node] = 1
@@ -90,7 +85,7 @@ if __name__ == '__main__':
     max_energy_cost = 287932
 
     # find shortest distance from source to destination node
-    path, shortest_dist, total_energy_cost = ucs(graph, dist, cost, src, dest, max_energy_cost)
+    path, shortest_dist, total_energy_cost = ucs_with_budget(graph, dist, cost, src, dest, max_energy_cost)
 
     # print the shortest path
     print("Shortest path: ", end="")

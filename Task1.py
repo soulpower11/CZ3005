@@ -1,7 +1,7 @@
 import json
 from queue import PriorityQueue
 
-def ucs(graph, dist, src, dest):
+def ucs_without_budget(graph, dist, src, dest):
 
     # create a priority queue
     queue = PriorityQueue()
@@ -34,17 +34,17 @@ def ucs(graph, dist, src, dest):
 
         # check for the non visited nodes
         if cur_node not in visited:
-            for i in range(len(graph[str(cur_node)])):
+            for neighbour in graph[cur_node]:
 
                 # clone current path to a new path to 
                 # prevent appending to the current path
                 newPath = cur_path[:]
 
                 # append the adjacent node to the new path
-                newPath.append(graph[str(cur_node)][i])
+                newPath.append(neighbour)
 
                 # calculate the new distance
-                newDist = cur_dist + dist[f"{cur_node},{graph[str(cur_node)][i]}"]
+                newDist = cur_dist + dist[f"{cur_node},{neighbour}"]
 
                 # push adjacent node with it's distance and path into priority queue
                 queue.put([newDist, newPath])
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     dest = '50'
 
     # find shortest distance from source to destination node
-    path, shortest_dist,  = ucs(graph, dist, src, dest)
+    path, shortest_dist = ucs_without_budget(graph, dist, src, dest)
 
     # print the shortest path
     print("Shortest path: ", end="")

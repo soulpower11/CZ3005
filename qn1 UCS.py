@@ -37,18 +37,18 @@ def ucs(graph, dist, src, dest):
 
         # check for the non visited nodes
         if cur_node not in visited:
-            for i in range(len(graph[str(cur_node)])):
-
+            for neighbour in graph[cur_node]:
+            
                 # clone current path to a new path to 
                 # prevent appending to the current path
                 newPath = cur_path[:]
                 # append the adjacent node to the new path
-                newPath.append(graph[str(cur_node)][i])
+                newPath.append(neighbour)
 
                 # calculate the new distance
                 # new distance is multiplied by -1 so that
                 # least priority is at the top
-                newDist = (cur_dist + dist[f"{cur_node},{graph[str(cur_node)][i]}"]) * -1
+                newDist = (cur_dist + dist[f"{cur_node},{neighbour}"]) * -1
 
                 # push adjacent node with it's distance and path into priority queue
                 queue.append([newDist, newPath])
@@ -74,7 +74,7 @@ if __name__ == '__main__':
     dest = '50'
 
     # find shortest distance from source to destination node
-    path, shortest_dist,  = ucs(graph, dist, src, dest)
+    path, shortest_dist = ucs(graph, dist, src, dest)
 
     # print the shortest path
     print("Shortest path: ", end="")
