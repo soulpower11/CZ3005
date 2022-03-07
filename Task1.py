@@ -82,7 +82,7 @@ if __name__ == '__main__':
     dest = '50'
 
     # find shortest distance from source to destination node
-    path, shortest_dist = ucs_without_budget(graph, dist, src, dest)
+    path, shortest_dist = dijkstra_without_budget(graph, dist, src, dest)
 
     # print the shortest path
     print("Shortest path: ", end="")
