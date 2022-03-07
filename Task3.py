@@ -20,7 +20,7 @@ def a_star_search(graph, dist, cost, coord, src, dest, max_energy_cost):
     visited = {}
 
     # while the queue is not empty
-    while queue:
+    while not queue.empty():
 
         # pop the element with the highest priority
         e = queue.get()

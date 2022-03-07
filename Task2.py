@@ -13,7 +13,7 @@ def ucs_with_budget(graph, dist, cost, src, dest, max_energy_cost):
     visited = {}
 
     # while the queue is not empty
-    while queue:
+    while not queue.empty():
 
         # pop the element with the highest priority
         e = queue.get()
