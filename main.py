@@ -30,7 +30,7 @@ if __name__ == '__main__':
     # set max energy cost
     max_energy_cost = 287932
 
-    print("Task 1 - Uniform Cost Search to solve a relaxed version of the NYC instance where we do not have the energy constraint")
+    print("Task 1 - Dijkstra's Algorithm to solve a relaxed version of the NYC instance where we do not have the energy constraint")
 
     # find shortest distance from source to destination node without energy budget using Uniform Cost Search
     path, shortest_dist = dijkstra_without_budget(graph, dist, src, dest)
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     # print the shortest distance
     print(f"Shortest Distance: {shortest_dist}.\n")
 
-    print("Task 2 - Uniform Cost Search to solve the NYC instance")
+    print("Task 2 - Dijkstra's Algorithm to solve the NYC instance")
 
     # find shortest distance from source to destination node with energy budget using Uniform Cost Search
     path, shortest_dist, total_energy_cost = dijkstra_with_budget(graph, dist, cost, src, dest, max_energy_cost)
