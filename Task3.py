@@ -1,5 +1,6 @@
 import json
 from math import sqrt
+import math
 from queue import PriorityQueue
 
 def heuristic(dest, neighbour, coord):
@@ -19,6 +20,14 @@ def a_star_search(graph, dist, cost, coord, src, dest, max_energy_cost):
     # dictionary to keep track of visited node
     visited = {}
 
+    # dictionary to keep track of the node distance
+    # for checking if there's another shortest path
+    distance = {src: math.inf}
+
+    # dictionary to keep track of the node energy cost
+    # for checking if there's another lower energy cost
+    energy = {src: math.inf}
+
     # while the queue is not empty
     while queue:
 
@@ -37,6 +46,9 @@ def a_star_search(graph, dist, cost, coord, src, dest, max_energy_cost):
         # set the current node to the last node in the path
         cur_node = cur_path[-1]
 
+        # mark current ndoe as visited
+        visited[cur_node] = 1
+
         # check if current node is the destination node
         if cur_node == dest:
             # return the path and the total distance from source to destination node
@@ -44,6 +56,16 @@ def a_star_search(graph, dist, cost, coord, src, dest, max_energy_cost):
 
         # check for the non visited nodes
         for neighbour in graph[cur_node]:
+
+            # if the distance for this not is not initialized
+            if neighbour not in distance:
+                # initialized the node distance
+                distance[neighbour] = math.inf
+            
+            # if the energy for this not is not initialized
+            if neighbour not in energy:
+                # initialized the node energy cost
+                energy[neighbour] = math.inf
 
             # clone current path to a new path to
             # prevent appending to the current path
@@ -58,7 +80,7 @@ def a_star_search(graph, dist, cost, coord, src, dest, max_energy_cost):
             # calculate the new distance
             newDist = cur_dist + dist[f"{cur_node},{neighbour}"]
 
-            if neighbour not in visited or newDist < cur_dist:
+            if neighbour not in visited and distance[neighbour] > newDist or newDist < cur_dist or energy[neighbour] > newCost:
                 # check if new cost is less than the max energy cost
                 if newCost <= max_energy_cost:
                     # calculate the new priority
@@ -66,10 +88,11 @@ def a_star_search(graph, dist, cost, coord, src, dest, max_energy_cost):
                     
                     # push adjacent node with it's priority, distance and path into priority queue
                     queue.put([priority, newDist, newCost, newPath])
-
-        # mark current ndoe as visited
-        visited[cur_node] = 1
-
+                    # update the distance of the node
+                    distance[neighbour] = newDist
+                    # update the distance of the node
+                    energy[neighbour] = newCost
+                    
 # main function
 if __name__ == '__main__':
 

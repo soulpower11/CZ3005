@@ -1,14 +1,20 @@
 import json
+from math import sqrt
 import math
-from queue import PriorityQueue
 
-def dijkstra_with_budget(graph, dist, cost, src, dest, max_energy_cost):
+def heuristic(dest, neighbour, coord):
+    (x1, y1) = coord[dest]
+    (x2, y2) = coord[neighbour]
+    # find the straight line distance between two ndoes
+    return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2))
+    
+def a_star_search(graph, dist, cost, coord, src, dest, max_energy_cost):
 
     # create a priority queue
-    queue = PriorityQueue()
+    queue = []
 
-    # push the starting index and path
-    queue.put([0, 0, [src]])
+    # push the starting index
+    queue.append([0, 0, 0, [src]])
 
     # dictionary to keep track of visited node
     visited = {}
@@ -24,17 +30,21 @@ def dijkstra_with_budget(graph, dist, cost, src, dest, max_energy_cost):
     # while the queue is not empty
     while queue:
 
+        # sort the queue so that the element with the highest priority is the last element
+        queue = sorted(queue)
+        e = queue[-1]
+
         # pop the element with the highest priority
-        e = queue.get()
+        del queue[-1]
 
         # get the current distance
-        cur_dist = e[0]
+        cur_dist = e[1]
 
         # get the current energy cost
-        cur_cost = e[1]
+        cur_cost = e[2]
 
         # get the current path
-        cur_path = e[2]
+        cur_path = e[3]
 
         # set the current node to the last node in the path
         cur_node = cur_path[-1]
@@ -47,9 +57,9 @@ def dijkstra_with_budget(graph, dist, cost, src, dest, max_energy_cost):
             # return the path and the total distance from source to destination node
             return cur_path, cur_dist, cur_cost
 
-        # check for adjacent node
+        # check for the non visited nodes
         for neighbour in graph[cur_node]:
-            
+
             # if the distance for this not is not initialized
             if neighbour not in distance:
                 # initialized the node distance
@@ -59,10 +69,11 @@ def dijkstra_with_budget(graph, dist, cost, src, dest, max_energy_cost):
             if neighbour not in energy:
                 # initialized the node energy cost
                 energy[neighbour] = math.inf
-            
-            # clone current path to a new path to 
+
+            # clone current path to a new path to
             # prevent appending to the current path
             newPath = cur_path[:]
+
             # append the adjacent node to the new path
             newPath.append(neighbour)
 
@@ -72,13 +83,16 @@ def dijkstra_with_budget(graph, dist, cost, src, dest, max_energy_cost):
             # calculate the new distance
             newDist = cur_dist + dist[f"{cur_node},{neighbour}"]
 
-            # if adjacent node is not in visted and if the new distance smaller than the old distance
-            # or if the new energy cost is smaller than the old energy cost
-            if neighbour not in visited and distance[neighbour] > newDist or energy[neighbour] > newCost:
-                # check if new cost is within the budget
+            if neighbour not in visited and distance[neighbour] > newDist or newDist < cur_dist or energy[neighbour] > newCost:
+                # check if new cost is less than the max energy cost
                 if newCost <= max_energy_cost:
-                    # push adjacent node with it's distance and path into priority queue
-                    queue.put([newDist, newCost, newPath])
+                    # calculate the new priority
+                    # new priority is multiplied by -1 so that
+                    # least priority is at the top
+                    priority = (newDist + heuristic(dest, neighbour, coord)) * -1
+
+                    # push adjacent node with it's priority, distance and path into priority queue
+                    queue.append([priority, newDist, newCost, newPath])
                     # update the distance of the node
                     distance[neighbour] = newDist
                     # update the distance of the node
@@ -99,6 +113,10 @@ if __name__ == '__main__':
     c = open("Cost.json")
     cost = json.load(c)
 
+    # load coord from JSON
+    cd = open("coord.json")
+    coord = json.load(cd)
+
     # set source node
     src = '1'
 
@@ -109,7 +127,7 @@ if __name__ == '__main__':
     max_energy_cost = 287932
 
     # find shortest distance from source to destination node
-    path, shortest_dist, total_energy_cost = ucs_with_budget(graph, dist, cost, src, dest, max_energy_cost)
+    path, shortest_dist, total_energy_cost = a_star_search(graph, dist, cost, coord, src, dest, max_energy_cost)
 
     # print the shortest path
     print("Shortest path: ", end="")

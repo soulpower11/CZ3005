@@ -1,14 +1,13 @@
 import json
 import math
-from queue import PriorityQueue
 
-def dijkstra_without_budget(graph, dist, src, dest):
+def dijkstra(graph, dist, src, dest):
 
     # create a priority queue
-    queue = PriorityQueue()
+    queue = []
 
     # push the starting index and path
-    queue.put([0, [src]])
+    queue.append([0, [src]])
 
     # dictionary to keep track of visited node
     visited = {}
@@ -16,15 +15,19 @@ def dijkstra_without_budget(graph, dist, src, dest):
     # dictionary to keep track of the node distance
     # for checking if there's another shortest path
     distance = {src: math.inf}
-    
+
     # while the queue is not empty
     while queue:
 
+        # sort the queue so that the element with the highest priority is the last element
+        queue = sorted(queue)
+        e = queue[-1]
+
         # pop the element with the highest priority
-        e = queue.get()
+        del queue[-1]
 
         # get the current distance
-        cur_dist = e[0]
+        cur_dist = e[0] * -1
 
         # get the current path
         cur_path = e[1]
@@ -60,10 +63,12 @@ def dijkstra_without_budget(graph, dist, src, dest):
             # if adjacent node is not in visted and if the new distance smaller than the old distance
             if neighbour not in visited and distance[neighbour] > newDist:
                 # push adjacent node with it's distance and path into priority queue
-                queue.put([newDist, newPath])
+                # new distance is multiplied by -1 so that
+                # least priority is at the top
+                queue.append([newDist*-1, newPath])
                 # update the distance of the node
                 distance[neighbour] = newDist
-
+        
 # main function
 if __name__ == '__main__':
 
@@ -82,7 +87,7 @@ if __name__ == '__main__':
     dest = '50'
 
     # find shortest distance from source to destination node
-    path, shortest_dist = ucs_without_budget(graph, dist, src, dest)
+    path, shortest_dist = dijkstra(graph, dist, src, dest)
 
     # print the shortest path
     print("Shortest path: ", end="")

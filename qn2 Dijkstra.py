@@ -1,14 +1,13 @@
 import json
 import math
-from queue import PriorityQueue
 
-def dijkstra_with_budget(graph, dist, cost, src, dest, max_energy_cost):
+def dijkstra(graph, dist, cost, src, dest, max_energy_cost):
 
     # create a priority queue
-    queue = PriorityQueue()
+    queue = []
 
-    # push the starting index and path
-    queue.put([0, 0, [src]])
+    # push the starting index
+    queue.append([0, 0, [src]])
 
     # dictionary to keep track of visited node
     visited = {}
@@ -24,11 +23,15 @@ def dijkstra_with_budget(graph, dist, cost, src, dest, max_energy_cost):
     # while the queue is not empty
     while queue:
 
+        # sort the queue so that the element with the highest priority is the last element
+        queue = sorted(queue)
+        e = queue[-1]
+
         # pop the element with the highest priority
-        e = queue.get()
+        del queue[-1]
 
         # get the current distance
-        cur_dist = e[0]
+        cur_dist = e[0] * -1
 
         # get the current energy cost
         cur_cost = e[1]
@@ -78,7 +81,9 @@ def dijkstra_with_budget(graph, dist, cost, src, dest, max_energy_cost):
                 # check if new cost is within the budget
                 if newCost <= max_energy_cost:
                     # push adjacent node with it's distance and path into priority queue
-                    queue.put([newDist, newCost, newPath])
+                    # new distance is multiplied by -1 so that
+                    # least priority is at the top
+                    queue.append([newDist*-1, newCost, newPath])
                     # update the distance of the node
                     distance[neighbour] = newDist
                     # update the distance of the node
@@ -109,7 +114,7 @@ if __name__ == '__main__':
     max_energy_cost = 287932
 
     # find shortest distance from source to destination node
-    path, shortest_dist, total_energy_cost = ucs_with_budget(graph, dist, cost, src, dest, max_energy_cost)
+    path, shortest_dist, total_energy_cost = dijkstra(graph, dist, cost, src, dest, max_energy_cost)
 
     # print the shortest path
     print("Shortest path: ", end="")
