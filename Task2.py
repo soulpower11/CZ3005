@@ -81,7 +81,7 @@ def dijkstra_with_budget(graph, dist, cost, src, dest, max_energy_cost):
                     queue.put([newDist, newCost, newPath])
                     # update the distance of the node
                     distance[neighbour] = newDist
-                    # update the distance of the node
+                    # update the energy cost of the node
                     energy[neighbour] = newCost
 
 # main function
