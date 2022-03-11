@@ -2,7 +2,7 @@ import json
 import math
 from queue import PriorityQueue
 
-def dijkstra_without_budget(graph, dist, src, dest):
+def ucs_without_budget(graph, dist, src, dest):
 
     # create a priority queue
     queue = PriorityQueue()
